@@ -24,6 +24,33 @@
 
 <body>
    
+  <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="imageurl" class="form-label">Image Url</label>
+          <input type="url" class="form-control" id="imageurl" placeholder="https://fitness.images.com">
+          <label for="tasktitle" class="form-label">Task Title</label>
+          <input type="text" class="form-control" id="tasktitle" placeholder="My Diet">
+          <label for="tasktype" class="form-label">Task Type</label>
+          <input type="text" class="form-control" id="tasktype" placeholder="Fitness">
+          <label for="taskdescription" class="form-label">Task Description</label>
+          <textarea rows="6" class="form-control" id="taskdescription" placeholder="Oh God please make me fit as soon as possible.I don't want to do any fitness task anymore."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-start">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="saveChanges()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
   
   <!-- Navbar-->
 
@@ -45,7 +72,7 @@
               </li>
               
             </ul>
-            <button type="button" class="btn btn-primary">  <i class="fas fa-plus"></i> Add New </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">  <i class="fas fa-plus"></i> Add New </button>
             
           </div>
         </div>
@@ -66,7 +93,9 @@
 
         </div>
       </section>
-      <div class="row">
+
+      <section>
+      <div class="row task__container">
         <div class="col-md-6 col-lg-4">  <!-- this means we can get upto 3 cards in one row in pc as 4*3=12-->
           <div class="card">
             <div class="card-header d-flex justify-content-end gap-2"> 
@@ -88,15 +117,17 @@
         </div>
         
       </div>
-      
-      <section>
-        
       </section>
 
-   </div>
+
+      
+    </div>
 
    
     <!-- Javascript Bundle from Bootstrap-->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-</body>
+
+    <!-- My javascript-->
+    <script src="index.js"></script>
+    </body>
 </html>
