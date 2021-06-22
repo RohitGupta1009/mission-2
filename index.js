@@ -23,7 +23,7 @@ const newCard = ({id,imageUrl,taskTitle,taskType,taskDescription})=>    // destr
   </div>
 </div>
 
-</div>`
+</div>`;
 
 
 
@@ -46,5 +46,15 @@ const saveChanges = () =>
 }
 console.log(taskContainer);
 
+
+/* Issues */
+
+// 1) The modal was not closing upon adding new card                      -> Resolved 
+// 2) The cards were deleted after refresh -> Local storage (5MB)
+
+// Features 
+// 1) Delete modal feature
+// 2) Open Task
+// 3) Edit Task 
 
 
