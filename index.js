@@ -1,17 +1,19 @@
-const taskContainer=document.querySelector(".task__container"); // to directly access the cards instead of array format 
+const taskContainer=document.querySelector(".task__container");          // to directly access the cards instead of array format 
 
 // Global Store 
-const globalStore =[]; // for issue 2 (cards deleted on refreshing) -> resolving by storing cards in local storage 
+let globalStore =[];      
 
 
 const newCard = ({id,imageUrl,taskTitle,taskType,taskDescription})=>    // destructuring the object made i.e taskData
 
+
 // Dynamically designing the same card for reusability
+
 `<div class="col-md-6 col-lg-4"id=${id}>  
 <div class="card">
   <div class="card-header d-flex justify-content-end gap-2"> 
     <button type="button" class="btn btn-outline-success"><i class="fas fa-pencil-alt"></i></button>
-    <button type="button" class="btn btn-outline-danger"><i class="fas fa-trash-alt"></i></button>
+    <button type="button" class="btn btn-outline-danger" id=${id} onclick="deleteCard.apply(this,arguments)"><i class="fas fa-trash-alt"id=${id} onclick="deleteCard.apply(this,arguments)"></i></button>
   </div>
   <img src= ${imageUrl} class="card-img-top" alt="...">
   <div class="card-body">
@@ -28,21 +30,21 @@ const newCard = ({id,imageUrl,taskTitle,taskType,taskDescription})=>    // destr
 </div>`;
 
 
-const loadInitialTaskCards= () =>{
-
+const loadInitialTaskCards= () =>
+{
 //access local storage 
 
-const getInitialData = localStorage.getItem("tasky");
+const getInitialData = localStorage.tasky;
 
-if(!getInitialData) return ;   // if device dosen't see any item as id : tasky return null or just teturn (fixing a potential bug)
+if(!getInitialData) return ;                                       // if device dosen't see any item as id : tasky return null or just teturn (fixing a potential bug)
 
 // convert stringified object to object
 
-const {cards}=JSON.parse(getInitialData);  // {cards} means we have destructured it as well
+const {cards}=JSON.parse(getInitialData);                         // {cards} means we have destructured it as well
 
-// map around the array to generate HTML card and inject it to DOM
+//map around the array to generate HTML card and inject it to DOM
 
-cards.map((cardObject)=>                // basically used for looping in array .. we are doing for each card
+cards.map((cardObject)=>                                         // basically used for looping in array .. we are doing for each card
 {
   const createNewCard=newCard(cardObject);
   taskContainer.insertAdjacentHTML("beforeend",createNewCard);
@@ -52,41 +54,77 @@ cards.map((cardObject)=>                // basically used for looping in array .
 };
 
 
+
+const updateLocalStorage= () =>
+{
+  localStorage.setItem("tasky",JSON.stringify({cards:globalStore}));    // key, the data to store . here we shouldn't give array directly so create object than give array in it. stringify converts all the data in string form so local storage can store it 
+};
+
+
 const saveChanges = () =>
 {
   const taskData =
   {
-      id: `${Date.now()}`,               // This will return unique number for card id everytime. It will behave as card id
-      imageUrl:document.getElementById("imageurl").value, //parent object of browser->window & parent object of html -> document (whenever we want to Access html document)
+      id: `${Date.now()}`,                                              // This will return unique number for card id everytime. It will behave as card id
+      imageUrl:document.getElementById("imageurl").value,               //parent object of browser->window & parent object of html -> document (whenever we want to Access html document)
       taskTitle:document.getElementById("tasktitle").value,
       taskType:document.getElementById("tasktype").value, 
       taskDescription:document.getElementById("taskdescription").value,
       
   };
 
+
+
   const createNewCard=newCard(taskData);
   taskContainer.insertAdjacentHTML("beforeend",createNewCard);
   globalStore.push(taskData);
 
-  // Application programming interface (API) :
-  //Here we have to use local storage as application and we want to program it to save or add the new data by using the interface 
-  //So we have to call the local storage API 
-  // So the interface will be :
+
+  /* Application programming interface (API) :
+  
+  Here we have to use local storage as application and we want to program it to save or add the new data by using the interface So we have to call the local storage API 
+  So the interface will be : */
 
   // add to local storage 
-  localStorage.setItem("tasky",JSON.stringify({cards:globalStore})); // key, the data to store . here we shouldn't give 
- //array directly so create object than give array in it. stringify converts all the data in string form so local storage can store it 
+
+  updateLocalStorage();        
   console.log(globalStore);
  
 };
 
-/* Issues */
+const deleteCard =(event) => {
+  //id 
 
-// 1) The modal was not closing upon adding new card                      -> Resolved 
-// 2) The cards were deleted after refresh -> Local storage (5MB)
+  event=window.event;                                                            // assigning browser event to this event 
+  const targetId =event.target.id;                                               // storing the id of the target 
+  const tagname = event.target.tagName;                                          //BUTTON
+  console.log(targetId);
 
-// Features 
-// 1) Delete modal feature
+  //search the globalStore, remove the object which matches the id 
+
+  globalStore= globalStore.filter((cardObject)=>cardObject.id !=targetId);
+  
+  updateLocalStorage();
+
+
+  //we have to access DOM to remove them
+
+  if(tagname==="BUTTON")
+  {
+      return taskContainer.removeChild(                                                  // go to task container 
+      event.target.parentNode.parentNode.parentNode                                      // telling it to delete this child
+    );
+  }
+    // else for the icon: one step extra
+
+     return taskContainer.removeChild(                                                  // go to task container 
+    event.target.parentNode.parentNode.parentNode.parentNode                            // telling it to delete this child
+  );
+};
+
+
+
+//Remaining :
 // 2) Open Task
 // 3) Edit Task 
 
