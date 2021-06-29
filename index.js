@@ -12,7 +12,7 @@ const newCard = ({id,imageUrl,taskTitle,taskType,taskDescription})=>    // destr
 `<div class="col-md-6 col-lg-4"id=${id}>  
 <div class="card">
   <div class="card-header d-flex justify-content-end gap-2"> 
-    <button type="button" class="btn btn-outline-success"><i class="fas fa-pencil-alt"></i></button>
+    <button type="button" id=${id} class="btn btn-outline-success"><i class="fas fa-pencil-alt" id=${id} onclick="editCard.apply(this,arguments)"></i></button>
     <button type="button" class="btn btn-outline-danger" id=${id} onclick="deleteCard.apply(this,arguments)"><i class="fas fa-trash-alt"id=${id} onclick="deleteCard.apply(this,arguments)"></i></button>
   </div>
   <img src= ${imageUrl} class="card-img-top" alt="...">
@@ -22,11 +22,10 @@ const newCard = ({id,imageUrl,taskTitle,taskType,taskDescription})=>    // destr
      <span class="badge bg-primary">${taskType}</span>
   </div>
   <div class="card-footer text-muted"> 
-    <button type="button" class="btn btn-outline-primary float-end">Open Task</button> 
+    <button type="button" id=${id} class="btn btn-outline-primary float-end">Open Task</button> 
     <!-- if there is one component to shift use float instead of justify content-->
   </div>
 </div>
-
 </div>`;
 
 
@@ -124,8 +123,89 @@ const deleteCard =(event) => {
 
 
 
-//Remaining :
-// 2) Open Task
-// 3) Edit Task 
+// Features
 
+
+
+// Edit the card
+
+
+const editCard=(event)=>
+{
+  event = window.event;
+  // id
+  const targetID = event.target.id;
+  const tagname = event.target.tagName; // BUTTON
+
+  let parentElement;
+  if(tagname==="BUTTON")
+  {
+    parentElement=event.target.parentNode.parentNode;
+
+  }else{
+    parentElement=event.target.parentNode.parentNode.parentNode;
+  }
+
+   let taskTitle=parentElement.childNodes[5].childNodes[1];
+   let taskDescription=parentElement.childNodes[5].childNodes[3];
+   let taskType=parentElement.childNodes[5].childNodes[5];
+   let submitButton=parentElement.childNodes[7].childNodes[1];
+
+    taskTitle.setAttribute("contenteditable","true");
+    taskDescription.setAttribute("contenteditable","true");
+    taskType.setAttribute("contenteditable","true");
+    submitButton.setAttribute("onclick","saveEditChanges.apply(this,arguments)");
+    submitButton.innerHTML="Save Changes";
+};
+
+const saveEditChanges=(event)=>
+{
+  event = window.event;
+  // id
+  const targetId = event.target.id;
+  const tagname = event.target.tagName; // BUTTON
+
+  let parentElement;
+  if(tagname==="BUTTON")
+  {
+    parentElement=event.target.parentNode.parentNode;
+
+  }else{
+    parentElement=event.target.parentNode.parentNode.parentNode;
+  } 
+  let taskTitle=parentElement.childNodes[5].childNodes[1];
+  let taskDescription=parentElement.childNodes[5].childNodes[3];
+  let taskType=parentElement.childNodes[5].childNodes[5];
+  let submitButton=parentElement.childNodes[7].childNodes[1];
+
+
+
+ const updatedData={
+   taskTitle:taskTitle.innerHTML,
+   taskDescription:taskDescription.innerHTML,
+   taskType:taskType.innerHTML,
+ };
+   globalStore=globalStore.map((task)=>{
+    if(task.id===targetId)
+    {
+      return {
+
+      id: task.id,    
+      imageUrl:task.imageUrl,
+      taskTitle:updatedData.taskTitle,
+      taskType: updatedData.taskType,
+      taskDescription:updatedData.taskDescription,
+      }
+    }
+    return task;
+   });
+
+   updateLocalStorage();
+
+   taskTitle.setAttribute("contenteditable","false");
+    taskDescription.setAttribute("contenteditable","false");
+    taskType.setAttribute("contenteditable","false");
+    submitButton.removeAttribute("onclick");
+    submitButton.innerHTML="Open Task";
+};
 
