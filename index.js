@@ -208,4 +208,3 @@ const saveEditChanges=(event)=>
     submitButton.removeAttribute("onclick");
     submitButton.innerHTML="Open Task";
 };
-
